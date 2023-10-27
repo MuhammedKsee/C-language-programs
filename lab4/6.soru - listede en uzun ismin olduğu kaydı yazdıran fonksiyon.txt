@@ -1,0 +1,106 @@
+//kütüphaneleri tanımlıyoruz
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//struct yapısını oluşturuyoruz isim numara yaş ve *next olarak.
+struct node {
+    char name[10];
+    int stNumber;
+    int old;
+    struct node *next;
+};
+
+//liste oluşturucusunu yazıyoruz
+struct node *createList( char *name, int stNumber, int old) {
+    struct node *head = (struct node *)malloc(sizeof(struct node));
+
+    strncpy(head->name, name, 10);
+
+    head->stNumber = stNumber;
+    head->old = old;
+    head->next = NULL;
+
+    return head;
+}
+//listeye eleman ekleyen program
+struct node *addMember(struct node *head, char *name, int stNumber, int old) {
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    strncpy(newNode->name, name, 10);
+
+    newNode->stNumber = stNumber;
+    newNode->old = old;
+    newNode->next = NULL;
+
+    struct node *temp = head;
+    while(temp->next !=NULL){
+        temp = temp->next;
+    }
+    temp->next=newNode;
+}
+//listeyi yazdıran program
+void print(struct node *head) {
+    struct node *current = head;
+    while (current != NULL) {
+        printf("%s\t %d \t %d\t\n", current->name, current->stNumber, current->old);
+        current = current->next;
+    }
+    printf("NULL \n\n\n");
+    
+}
+//listede eleman bulan fonksiyon
+void findMember(struct node *head, const char name[10]) {
+    struct node *finder = head;
+    
+    while (finder != NULL) {
+        if (strcmp(finder->name, name) == 0) {
+            printf("%s \t %d \t %d\n", finder->name, finder->stNumber, finder->old);
+            return; 
+        }
+        finder = finder->next;
+    }
+    
+    printf("Name not found in the list\n");
+}
+
+//listedeki en uzun isimli kişiyi bulup yazdıran fonksiyon
+void longMemberName(struct node *head){
+    struct node *temp=head;
+    struct node *counter=(struct node *)malloc(sizeof(struct node));
+    int max=0;
+    
+    while(temp!=NULL){
+        if(strlen(temp->name)>max){
+            max=strlen(temp->name);
+        }
+        temp=temp->next;
+    }
+    temp = head;
+    while(temp!=NULL){
+        if(strlen(temp->name)==max){
+            printf("Longest name : %s\n",temp->name);
+            printf("length : %d\n",max);
+        }
+        temp=temp->next;
+    }
+}
+
+//main bloğu
+int main() {
+    struct node *head = createList("Muhammed", 22102380, 19);
+    //eleman ekleme
+    addMember(head,"Ahmet",22102381,20);
+    print(head);
+    addMember(head,"Mehmet",22102382,23);
+    print(head);
+    addMember(head,"Melisa",22102383,25);
+    print(head);
+    //en uzun isimli elemanı bulma
+    longMemberName(head);
+    //bellekten listeyi temizleme
+    while (head != NULL) {
+        struct node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+}

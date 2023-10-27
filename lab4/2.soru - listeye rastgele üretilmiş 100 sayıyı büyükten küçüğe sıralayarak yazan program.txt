@@ -1,0 +1,61 @@
+//Kütüphaneleri tanımlıyoruz ekstra olarak time.h tanımladık çünkü random sayılar alıcaz
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+//struct yapısını oluşturuyoruz
+struct Node {
+    int data;
+    struct Node* next;
+};
+//liste oluşturmak için bir createList fonksiyonu oluşturuyoruz
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+//listenin başına veya sonuna eleman eklemek için tek fonksiyon yazıyoruz
+//bu kez bize sorulan soru listeyi büyükten küçüğe sıralamak
+void insertSorted(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    
+    if (*head == NULL || (*head)->data < data) {
+        newNode->next = *head;
+        *head = newNode;
+    } else {
+        struct Node* current = *head;
+        while (current->next != NULL && current->next->data > data) {
+            current = current->next;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+//Main bloğu
+int main() {
+    int n = 100;
+    struct Node* list = NULL;
+
+    srand(time(0));
+//random sayı üreteci
+    for (int i = 0; i < n; i++) {
+        int randomNumber = rand() % 100; 
+        insertSorted(&list, randomNumber);
+    }
+//lissteyi yazdıran kısım
+    printf("Sıralanmış Liste:\n");
+    struct Node* current = list;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+//listeyi serbest bırakıp alan açan bölüm
+    while (list != NULL) {
+        struct Node* temp = list;
+        list = list->next;
+        free(temp);
+    }
+
+    return 0;
+}

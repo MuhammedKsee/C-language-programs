@@ -1,0 +1,79 @@
+//Kütüphaneleri tanımlıyoruz
+#include<stdio.h>
+#include<stdlib.h>
+
+//struct yapısı oluşturuyoruz
+struct node{
+    int data;
+    struct node *next;
+};
+
+//liste oluşturmak için bir createList fonksiyonu oluşturuyoruz
+struct node *createList(int data){
+    struct node *head = (struct node *)malloc(sizeof(struct node));//bellekte yer ayırıyoruz
+    head ->data = data;
+    head->next = NULL;
+    
+    return head;
+}
+
+//listemizi oluşturduğumuz için yeni elemanları eklemek için farklı structlar yazıyoruz mesela alttaki listenin başına eleman ekleme
+void *addFront(struct node *head,int data){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp ->data = data;
+    temp->next = head;
+    head = temp;
+}
+//listenin sonuna eleman ekleyen program
+void *addLast(struct node *head,int data){
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    
+    newNode ->data = data;
+    newNode->next = NULL;
+    
+    struct node *current = head;
+    while(current->next!=NULL){
+        current = current->next;
+    }
+    current->next = newNode;
+}
+
+//listeyi yazdıran program
+void print(struct node *head){
+    struct node *current=head;
+    while(current!=NULL){
+        printf("%d -> ",current->data);
+        current = current->next;
+    }
+    printf("NULL \n");
+}
+
+//main Bloğu
+int main (){
+    printf("Lutfen ilk elemani giriniz : ");
+    int e1;
+    scanf("%d",&e1);
+    //listeyi oluşturduk
+    struct node *head = createList(e1);
+    printf("Liste : ");
+    print(head);
+    int sayi1=0;
+    //klavyeden -1 girilene kadar işlem yapmasını sağlıyoruz eğer çift ise sona
+    //eğer tek ise başa ekleyecek
+    while(sayi1!=-1){
+            printf("Lutfen eleman giriniz : ");
+            scanf("%d",&sayi1);
+            if(sayi1==-1){
+                return;
+            }
+        if(sayi1%2==0){
+            addLast(head,sayi1);
+            print(head);
+        }
+        else{
+            head = addFront(head,sayi1);
+            print(head);
+        }
+    }
+    
+}
