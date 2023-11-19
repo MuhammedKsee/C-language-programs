@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    struct node *left;
+    struct node *right;
+    int data;
+};
+
+typedef struct node *BTREE;
+
+BTREE newNode(int data){
+    BTREE root = (BTREE)malloc(sizeof(struct node));
+    root->data = data;
+    root->left = NULL;
+    root->right = NULL;
+}
+
+BTREE insert(BTREE root,int data){
+    if(root!=NULL){
+        if(data<root->data){
+            root->left = insert(root->left,data);
+        }
+        else{
+            root->right = insert(root->right,data);
+        }
+    }
+    else{
+        root = newNode(data);
+    }
+    return root;
+}
+
+void inorder(BTREE root){
+    if(root!=NULL){
+        inorder(root->left);
+        printf("%4d",root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(BTREE root){
+    if(root!=NULL){
+        printf("%4d",root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(BTREE root){
+    if(root!=NULL){
+        postorder(root->left);
+        postorder(root->right);
+        printf("%4d",root->data);
+    }
+}
+
+
+
+int main(){
+    BTREE root = NULL;
+    int i;
+    scanf("%d",&i);
+	while(i!=-1)
+	{
+	  root=insert(root,i);
+	  scanf(“%d”,&i);
+	}
+	inorder(root);
+	printf("\n");
+	
+	preorder(root);
+	printf("\n");
+	
+	postorder(root);
+	printf("\n");
+}

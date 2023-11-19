@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define QUEUE_SIZE 10
+
+struct node {
+    struct node *next;
+    int data;
+};
+
+typedef struct{
+    struct node *rear;
+    struct node *front;
+    int cnt;
+}queue;
+
+void initialize(queue *q){
+    q->rear = NULL;
+    q->front = NULL;
+    q->cnt = 0;
+}
+
+int enqueue(queue *q,int data){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = data;
+    temp->next = NULL;
+    q->rear = temp;
+    q->front = temp;
+    q->cnt++;
+}
+
+
+int dequeue(queue *q){
+        
+    int data = q->front;
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    q->front = q->front->next;
+    free(temp);
+    q->cnt--;
+    return data;
+}
+
+void printer(queue *q){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    
+    for(temp = q->front;temp!=NULL;temp = temp->next)
+        printf("%d",temp->data);
+    printf("\n");
+}
+
+int main(){
+    queue q;
+    initialize(&q);
+    enqueue(&q,12);
+    printer(&q);
+    dequeue(&q);
+    enqueue(&q,11);
+    printer(&q);
+    enqueue(&q,10);
+    printer(&q);
+    enqueue(&q,9);
+    printer(&q);
+}

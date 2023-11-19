@@ -1,0 +1,66 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define STACK_SIZE 3
+
+struct node {
+    struct node *next;
+    int data;
+};
+
+typedef struct{ 
+    struct node *top;
+    int cnt;
+}stack;
+
+void createStack(stack *stk){
+    stk->top = NULL;
+    stk->cnt = 0;
+}
+
+void push(stack *stk,int data){
+    
+    
+    if(stk->cnt != STACK_SIZE){
+        struct node *newNode = (struct node *)malloc(sizeof(struct node));
+        if (newNode == NULL) {
+            printf("Memory allocation failed. Cannot push element into stack.\n");
+            return;
+        }
+        newNode->data = data;
+        newNode->next = stk->top;
+        stk->top = newNode;
+        stk->cnt++;
+    }
+    else{
+        printf("Stack is full\n");
+    }
+}
+
+int pop(stack *stk){
+    if(stk->cnt != 0){
+        int data = stk->top->data;
+        struct node *temp = stk->top;
+        stk->top = temp->next;
+        stk->cnt--;
+        free(temp);
+        return data;
+    }
+    else{
+        printf("Stack is empty!\n");
+    }
+}
+
+int main(){
+    stack stk;
+    createStack(&stk);
+    push(&stk,12);
+    printf("%4d",pop(&stk));
+    
+    push(&stk,13);
+    printf("%4d",pop(&stk));
+    push(&stk,14);
+    push(&stk,15);
+    printf("%4d",pop(&stk));
+    printf("%4d",pop(&stk));
+    
+}

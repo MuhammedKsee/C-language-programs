@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    struct node *next;
+    int data;
+};
+
+int createList(int data){
+    struct node *head = (struct node *)malloc(sizeof(struct node));
+    head->next = head;
+    head->data = data;
+    return head;
+}
+
+int addFront(struct node *head,int data){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = data;
+   
+    struct node *current = head;
+    while(current->next !=head){
+        current = current->next;
+    }
+    current->next = temp;
+    temp->next = head;
+    head = temp;
+    return head;
+}
+
+void printer(struct node *head){
+    struct node *temp = head;
+    
+    while(temp->next != head){
+        printf("%d ->",temp->data);
+        temp = temp->next;
+    }
+    printf("%d ->",temp->data);
+    printf("Devami tekrar head...\n");
+}
+
+int main(){
+    struct node *head = createList(12);
+    printer(head);
+    head = addFront(head,13);
+    printer(head);
+    
+    
+}
