@@ -1,106 +1,122 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
 struct node{
-    int data;
     struct node *next;
+    int data;
 };
 
-struct node *createList(int data){
-    struct node *head=(struct node *)malloc(sizeof(struct node));
+int createList(int data){
+    struct node *head = (struct node *)malloc(sizeof(struct node));
     head->data = data;
     head->next = NULL;
-    
-    return head;
+
 }
 
-void *appendFirst(struct node *head,int data){
-    struct node *addfront=(struct node *)malloc(sizeof(struct node));
-    addfront->data =data;
-    addfront->next =head;
-    head = addfront;
-    
-    return head;
-}
-
-void append(struct node *head,int data){
-    struct node *newNode=(struct node *)malloc(sizeof(struct node));
-    newNode->data =data;
-    newNode->next =NULL;
-        
-        struct node *current = head;
-        
-        while (current->next!=NULL){
-            current = current->next;
-        }
-        current->next = newNode;
-    
-}
-
-void *del(struct node *head, int data){
-    if(head!=NULL){
+void printer(struct node *head){
     struct node *temp = head;
-    struct node *del = (struct node *)malloc(sizeof(struct node));
-        if(head->data == data){
-            head = head->next;
-            free(temp);
-        }
-        else{
-            while (temp->next && temp->next->data != data){
-                temp = temp->next;
-            }
-            if(temp->next){
-                del = temp->next;
-                temp->next = del->next;
-                free(del);
-            }
-        }
-    }
-    return head;
-
-}
-
-void printList(struct node *head){
-    struct node *current = head;
     
-    while (current!=NULL){
-        printf("%d -> ",current->data);
-        current = current->next;
+    while(temp!=NULL){
+        printf("%d -> ",temp->data);
+        temp = temp->next;
     }
     printf("NULL\n");
-    
 }
 
-void printReverse(struct node *head){
-    if(head==NULL){
-        return;
+int addFront(struct node *head,int data){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = data;
+    
+    if(head!=NULL){
+    temp->next = head;
+    head = temp;
     }
     else{
-    printReverse(head->next);
-    printf("%d -> ",head->data);
+        head = temp;
     }
-    
 }
 
-int main(){
-    struct node *head = createList(15);
-    printList(head);
-    append(head, 23);
-    printList(head);
-    head =appendFirst(head, 34);
+int addNext(int data, struct node *head,int newData){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = newData;
+    struct node *current = head;
+    
+    if(head->next ==NULL){
+        head->next = temp;
+        temp->next = NULL;
+    }
+    else{
+        while(current->data !=data && current->next != NULL){
+            current = current->next;
+        }
+        if(current->data == data && current->next == NULL){
+            current->next = temp;
+            temp->next = NULL;
+        }
+        else if(current->data == data && current->next != NULL){
+            temp->next = current->next;
+            current->next = temp;
+        }
+        else if(current->data != data){
+            printf("%d isn't find\n",data);
+        }
+    }
+}
 
-    printList(head);
-    
-    head = del(head,15);
-    
-    printList(head);
-    
-    append (head,12);
-    
-    printList(head);
-    
-    printReverse(head);
-    return 0;
+
+int del(int data,struct node *head){
+    struct node *temp = head;
+    if(head->data == data){
+        head = temp->next;
+        temp = NULL;
+        return head;
+    }
+    else{    
+        while(temp->next->data != data){
+            temp = temp->next;
+        }
+        if(temp->next->data == data){
+            temp->next = temp->next->next;
+        }
+    }
+}
+
+void deleteList(struct node *head){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+        while(head->next!= NULL){
+                temp = head;
+                while(temp->next->next!=NULL){
+                temp = temp->next;
+                }
+                temp->next = NULL;
+        }
+        free(head);
+        return 0;
+    }
+
+int main(){
+    struct node *head = createList(11);
+    printer(head);
+    head = addFront(head,13);
+    printer(head);
+    addNext(11,head,10);
+    printer(head);
+    addNext(13,head,12);
+    printer(head);
+    addNext(14,head,12);
+    printer(head);
+    head = del(13,head);
+    printer(head);
+    del(10,head);
+    printer(head);
+    del(11,head);
+    printer(head);
+    addNext(12,head,11);
+    addNext(11,head,10);
+    addNext(10,head,9);
+    printer(head);
+    deleteList(head);
+    printer(head);
 }
 
 
