@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    struct node *next;
+    struct node *prev;
+    int data;
+};
+
+int createList(int data){
+    struct node *head = (struct node *)malloc(sizeof(struct node));
+    head->next = NULL;
+    head->prev = NULL;
+    head->data = data;
+    return head;
+}
+
+int addFront(struct node *head,int data){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->prev = NULL;
+    temp->next = head;
+    head->prev = temp;
+    temp->data = data;
+    head = temp;
+}
+
+int addNext(struct node *head,int data,int newData){
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    struct node *current = head;
+    temp->data = newData;
+    if(current->data == data && current->next != NULL){
+        temp->next = current->next;
+        current->next = temp;
+        temp->prev = current;
+        temp->next->prev = temp;
+    }
+    else{
+        while(current->data != data){
+            current = current->next;
+        }
+        if(current->data == data){
+            current->next = temp;
+            temp->next = NULL;
+            temp->prev = current;
+        }
+    }
+}
+
+int del(struct node *head,int data){
+    struct node *temp = head;
+    if(head->data == data){
+        head = head->next;
+        head->prev = NULL;
+        return head;
+    }
+    else{
+        while(temp->data != data){
+            temp = temp->next;
+        }
+        
+        if(temp->data == data){
+            temp->prev->next = temp->next;
+        }
+        free(temp);
+    }
+}
+
+
+void printer(struct node *head){
+    struct node *current = head;
+    printf("NULL -> ");
+    while(current->next!=NULL){
+        printf("%d <-> ",current->data);
+        current = current->next;
+    }
+    printf("%d -> ",current->data);
+    printf("NULL\n");
+}
+
+int main(){
+   struct node *head = createList(12);
+   printer(head);
+   head = addFront(head,14);
+   printer(head);
+   addNext(head,14,13);
+   printer(head);
+   addNext(head,12,11);
+   printer(head);
+   head = del(head,14);
+   printer(head);
+   head = addFront(head,14);
+   printer(head);
+   del(head,12);
+   printer(head);
+   del(head,11);
+   printer(head);
+}
